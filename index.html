@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ILIA — DBR Automation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  <style>
+    :root {
+      --md-sys-color-primary: #2A62E4;
+      --md-sys-color-on-primary: #FFFFFF;
+      --md-sys-color-primary-container: #DBE1FF;
+      --md-sys-color-on-primary-container: #00174E;
+      --md-sys-color-secondary: #565E71;
+      --md-sys-color-on-secondary: #FFFFFF;
+      --md-sys-color-secondary-container: #DBE2F9;
+      --md-sys-color-surface: #FDFBFF;
+      --md-sys-color-on-surface: #1A1B1F;
+      --md-sys-color-surface-variant: #E1E2EC;
+      --md-sys-color-on-surface-variant: #44464F;
+      --md-sys-color-surface-container-low: #F3F3FA;
+      --md-sys-color-surface-container: #EDEDF4;
+      --md-sys-color-surface-container-high: #E7E8EE;
+      --md-sys-color-background: #FDFBFF;
+      --md-sys-color-outline: #74777F;
+      --md-sys-color-outline-variant: #C4C6D0;
+      --md-sys-color-error: #BA1A1A;
+      --md-sys-color-error-container: #FFDAD6;
+      --ilia-success: #18A862;
+      --ilia-success-container: #C6F5D6;
+      --ilia-warning: #E6A82E;
+      --ilia-warning-container: #FCE9C2;
+      --ilia-info: #2A62E4;
+      --ilia-info-container: #DBE1FF;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Roboto', sans-serif; background: var(--md-sys-color-background); color: var(--md-sys-color-on-surface); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+    /* ── APP BAR ── */
+    .app-bar {
+      height: 64px; background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary);
+      display: flex; align-items: center; padding: 0 24px; gap: 16px;
+      flex-shrink: 0; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    }
+    .app-bar .logo { font-size: 22px; font-weight: 700; letter-spacing: 2px; }
+    .app-bar .divider { width: 1px; height: 24px; background: rgba(255,255,255,.3); }
+    .app-bar .page-title { font-size: 16px; font-weight: 500; opacity: .9; flex: 1; }
+    .app-bar .pill {
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
+      border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 500;
+    }
+    .app-bar .icon-btn { cursor: pointer; opacity: .85; display: flex; align-items: center; }
+    .app-bar .avatar {
+      width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.25);
+      display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; cursor: pointer;
+    }
+
+    /* ── SHELL ── */
+    .shell { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── NAV RAIL ── */
+    .nav-rail {
+      width: 88px; background: var(--md-sys-color-surface-container); flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: center; padding: 12px 0; gap: 4px;
+      border-right: 1px solid var(--md-sys-color-outline-variant);
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 12px;
+      border-radius: 16px; cursor: pointer; width: 76px; transition: background .15s;
+      color: var(--md-sys-color-on-surface-variant); font-size: 11px; font-weight: 500; text-align: center;
+    }
+    .nav-item:hover { background: var(--md-sys-color-surface-container-high); }
+    .nav-item.active { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
+    .nav-item .material-symbols-outlined { font-size: 22px; }
+
+    /* ── MAIN CONTENT ── */
+    .main { flex: 1; overflow-y: auto; background: var(--md-sys-color-background); }
+
+    /* ── TABS BAR ── */
+    .tabs-bar {
+      position: sticky; top: 0; z-index: 5;
+      background: var(--md-sys-color-surface); border-bottom: 1px solid var(--md-sys-color-outline-variant);
+      display: flex; padding: 0 32px; gap: 0;
+    }
+    .tab {
+      padding: 16px 20px; font-size: 14px; font-weight: 500; cursor: pointer;
+      color: var(--md-sys-color-on-surface-variant); border-bottom: 3px solid transparent;
+      transition: color .15s, border-color .15s; white-space: nowrap;
+    }
+    .tab:hover { color: var(--md-sys-color-primary); }
+    .tab.active { color: var(--md-sys-color-primary); border-bottom-color: var(--md-sys-color-primary); }
+
+    /* ── VIEWS ── */
+    .view { display: none; padding: 28px 32px; }
+    .view.active { display: block; }
+
+    /* ── PAGE HEADER ── */
+    .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+    .page-header h1 { font-size: 24px; font-weight: 400; color: var(--md-sys-color-on-surface); }
+    .page-header p { font-size: 14px; color: var(--md-sys-color-on-surface-variant); margin-top: 4px; }
+    .btn-filled {
+      background: var(--md-sys-color-primary); color: #fff; border: none; border-radius: 20px;
+      padding: 10px 24px; font-size: 14px; font-weight: 500; cursor: pointer;
+      display: flex; align-items: center; gap: 8px; transition: box-shadow .15s;
+    }
+    .btn-filled:hover { box-shadow: 0 2px 8px rgba(42,98,228,.4); }
+    .btn-outlined {
+      background: transparent; color: var(--md-sys-color-primary); border: 1px solid var(--md-sys-color-outline);
+      border-radius: 20px; padding: 9px 20px; font-size: 13px; font-weight: 500; cursor: pointer;
+    }
+
+    /* ── STAT CARDS ── */
+    .stats-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--md-sys-color-surface-container-low);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      border-radius: 16px; padding: 16px 18px;
+    }
+    .stat-card .label { font-size: 12px; color: var(--md-sys-color-on-surface-variant); font-weight: 500; margin-bottom: 8px; }
+    .stat-card .value { font-size: 28px; font-weight: 400; color: var(--md-sys-color-on-surface); }
+    .stat-card .delta { font-size: 12px; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+    .delta.up { color: var(--ilia-success); }
+    .delta.warn { color: var(--ilia-warning); }
+    .delta.err { color: var(--md-sys-color-error); }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; white-space: nowrap;
+    }
+    .badge.stage-1  { background: #E8F0FE; color: #174EA6; }
+    .badge.stage-2  { background: #E8F0FE; color: #174EA6; }
+    .badge.stage-3  { background: var(--ilia-warning-container); color: #6A4600; }
+    .badge.stage-4  { background: var(--ilia-warning-container); color: #6A4600; }
+    .badge.stage-5  { background: #FFF3E0; color: #7A4100; }
+    .badge.stage-6  { background: #FFF3E0; color: #7A4100; }
+    .badge.stage-7  { background: #FCE4EC; color: #880E4F; }
+    .badge.stage-8  { background: var(--md-sys-color-secondary-container); color: #1A2744; }
+    .badge.stage-9  { background: #EDE7F6; color: #4527A0; }
+    .badge.stage-10 { background: var(--md-sys-color-primary-container); color: #00174E; }
+    .badge.stage-11 { background: #E8F5E9; color: #1B5E20; }
+    .badge.stage-12 { background: var(--ilia-success-container); color: #003818; }
+    .badge.stage-13 { background: #F1F8E9; color: #33691E; }
+    .badge.awaiting { background: var(--ilia-warning-container); color: #6A4600; }
+    .badge.in-progress { background: var(--ilia-info-container); color: #00174E; }
+    .badge.complete { background: var(--ilia-success-container); color: #003818; }
+    .badge.overdue { background: var(--md-sys-color-error-container); color: #690005; }
+
+    /* ── DATA TABLE ── */
+    .card {
+      background: var(--md-sys-color-surface-container-low);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      border-radius: 16px; overflow: hidden; margin-bottom: 20px;
+    }
+    .card-header {
+      padding: 16px 20px; border-bottom: 1px solid var(--md-sys-color-outline-variant);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-header h2 { font-size: 16px; font-weight: 500; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th {
+      padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: .05em;
+      color: var(--md-sys-color-on-surface-variant); text-transform: uppercase;
+      background: var(--md-sys-color-surface-container); border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    }
+    tbody tr { border-bottom: 1px solid var(--md-sys-color-outline-variant); transition: background .1s; cursor: pointer; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--md-sys-color-surface-container); }
+    tbody td { padding: 13px 16px; color: var(--md-sys-color-on-surface); vertical-align: middle; }
+    tbody td.mono { font-family: monospace; font-size: 12px; color: var(--md-sys-color-on-surface-variant); }
+    .action-link { color: var(--md-sys-color-primary); font-weight: 500; font-size: 12px; text-decoration: none; cursor: pointer; }
+
+    /* ── FILTER ROW ── */
+    .filter-row { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+    .search-box {
+      display: flex; align-items: center; gap: 8px;
+      border: 1px solid var(--md-sys-color-outline-variant); border-radius: 12px;
+      padding: 8px 14px; background: var(--md-sys-color-surface-container-low); font-size: 13px; flex: 1; min-width: 200px;
+    }
+    .search-box input { border: none; background: none; outline: none; font-size: 13px; width: 100%; color: var(--md-sys-color-on-surface); }
+    .chip-filter {
+      padding: 6px 14px; border-radius: 20px; border: 1px solid var(--md-sys-color-outline-variant);
+      font-size: 12px; font-weight: 500; cursor: pointer; background: var(--md-sys-color-surface-container-low);
+      color: var(--md-sys-color-on-surface-variant); transition: all .15s;
+    }
+    .chip-filter:hover, .chip-filter.active { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); border-color: var(--md-sys-color-primary-container); }
+
+    /* ── WORKFLOW DIAGRAM ── */
+    .workflow-wrap { background: var(--md-sys-color-surface-container-low); border: 1px solid var(--md-sys-color-outline-variant); border-radius: 16px; padding: 28px 32px; margin-bottom: 20px; }
+    .workflow-title { font-size: 18px; font-weight: 500; margin-bottom: 6px; }
+    .workflow-sub { font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 28px; }
+    .flow-track {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0;
+      position: relative;
+    }
+    .flow-row {
+      display: contents;
+    }
+    /* Horizontal flow using flex */
+    .flow-h { display: flex; align-items: flex-start; gap: 0; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 8px; }
+    .flow-col { display: flex; flex-direction: column; align-items: center; gap: 0; }
+    .stage-node {
+      width: 120px; border-radius: 12px; padding: 12px 10px; text-align: center;
+      border: 2px solid transparent; cursor: pointer; transition: box-shadow .15s, transform .1s;
+      flex-shrink: 0;
+    }
+    .stage-node:hover { box-shadow: 0 4px 12px rgba(0,0,0,.12); transform: translateY(-2px); }
+    .stage-node .s-num { font-size: 10px; font-weight: 700; letter-spacing: .05em; margin-bottom: 4px; }
+    .stage-node .s-icon { font-size: 22px; margin-bottom: 6px; }
+    .stage-node .s-name { font-size: 11px; font-weight: 600; line-height: 1.3; margin-bottom: 4px; }
+    .stage-node .s-desc { font-size: 10px; opacity: .8; line-height: 1.3; }
+    .stage-node.sig { border-style: dashed; }
+
+    /* stage colors */
+    .s-auto   { background: #E8F0FE; border-color: #4285F4; color: #174EA6; }
+    .s-notify { background: #E3F2FD; border-color: #29B6F6; color: #01579B; }
+    .s-client { background: #FFF8E1; border-color: #FFC107; color: #6A4600; }
+    .s-doc    { background: #FFF3E0; border-color: #FF9800; color: #7A4100; }
+    .s-sig1   { background: #FCE4EC; border-color: #E91E63; color: #880E4F; }
+    .s-sig2   { background: #F3E5F5; border-color: #9C27B0; color: #4A148C; }
+    .s-trustee{ background: #EDE7F6; border-color: #673AB7; color: #311B92; }
+    .s-sig3   { background: #E8EAF6; border-color: #3F51B5; color: #1A237E; }
+    .s-admin  { background: var(--md-sys-color-primary-container); border-color: var(--md-sys-color-primary); color: #00174E; }
+    .s-sig4   { background: #E8F5E9; border-color: #4CAF50; color: #1B5E20; }
+    .s-carrier{ background: var(--ilia-success-container); border-color: var(--ilia-success); color: #003818; }
+    .s-confirm{ background: #F1F8E9; border-color: #8BC34A; color: #33691E; }
+
+    .arrow-h {
+      width: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      color: var(--md-sys-color-outline); font-size: 20px; margin-top: 28px;
+    }
+    .arrow-down {
+      height: 24px; display: flex; align-items: center; justify-content: center;
+      color: var(--md-sys-color-outline); font-size: 18px;
+    }
+    .sig-badge-inline {
+      display: inline-flex; align-items: center; gap: 4px; background: #fff;
+      border: 1.5px solid; border-radius: 6px; padding: 2px 8px; font-size: 10px; font-weight: 700;
+      margin-top: 4px;
+    }
+    .sig-badge-inline.c1 { border-color: #E91E63; color: #E91E63; }
+    .sig-badge-inline.c2 { border-color: #9C27B0; color: #9C27B0; }
+    .sig-badge-inline.c3 { border-color: #3F51B5; color: #3F51B5; }
+    .sig-badge-inline.c4 { border-color: #4CAF50; color: #4CAF50; }
+
+    .legend { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--md-sys-color-outline-variant); }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--md-sys-color-on-surface-variant); }
+    .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+    /* ── ROW 2 of flow ── */
+    .flow-wrap { overflow-x: auto; }
+    .flow-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      min-width: 900px;
+    }
+    .flow-line {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+    }
+
+    /* ── PROTOTYPE BANNER ── */
+    .proto-banner {
+      background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);
+      text-align: center; padding: 8px; font-size: 12px; flex-shrink: 0;
+      border-top: 1px solid var(--md-sys-color-outline-variant);
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--md-sys-color-outline-variant); border-radius: 3px; }
+
+    /* ── ALERT ── */
+    .alert-row { display: flex; gap: 12px; margin-bottom: 20px; }
+    .alert-card {
+      flex: 1; border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start;
+      border: 1px solid;
+    }
+    .alert-card.warn { background: var(--ilia-warning-container); border-color: var(--ilia-warning); }
+    .alert-card.info { background: var(--ilia-info-container); border-color: var(--ilia-info); }
+    .alert-card .material-symbols-outlined { font-size: 20px; flex-shrink: 0; }
+    .alert-card.warn .material-symbols-outlined { color: #7A4100; }
+    .alert-card.info .material-symbols-outlined { color: #00174E; }
+    .alert-card .a-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .alert-card.warn .a-title { color: #6A4600; }
+    .alert-card.info .a-title { color: #00174E; }
+    .alert-card .a-body { font-size: 12px; color: var(--md-sys-color-on-surface-variant); }
+
+    /* ── SIGNING CEREMONY CARDS ── */
+    .sig-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+    .sig-card { border-radius: 14px; padding: 16px; border: 2px solid; }
+    .sig-card.c1 { background: #FCE4EC; border-color: #E91E63; }
+    .sig-card.c2 { background: #F3E5F5; border-color: #9C27B0; }
+    .sig-card.c3 { background: #E8EAF6; border-color: #3F51B5; }
+    .sig-card.c4 { background: #E8F5E9; border-color: #4CAF50; }
+    .sig-card .sc-num { font-size: 11px; font-weight: 700; letter-spacing: .06em; margin-bottom: 6px; }
+    .sig-card.c1 .sc-num { color: #E91E63; }
+    .sig-card.c2 .sc-num { color: #9C27B0; }
+    .sig-card.c3 .sc-num { color: #3F51B5; }
+    .sig-card.c4 .sc-num { color: #4CAF50; }
+    .sig-card .sc-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .sig-card.c1 .sc-title { color: #880E4F; }
+    .sig-card.c2 .sc-title { color: #4A148C; }
+    .sig-card.c3 .sc-title { color: #1A237E; }
+    .sig-card.c4 .sc-title { color: #1B5E20; }
+    .sig-card .sc-doc { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-bottom: 8px; }
+    .sig-card.c1 .sc-doc { background: rgba(233,30,99,.12); color: #880E4F; }
+    .sig-card.c2 .sc-doc { background: rgba(156,39,176,.12); color: #4A148C; }
+    .sig-card.c3 .sc-doc { background: rgba(63,81,181,.12); color: #1A237E; }
+    .sig-card.c4 .sc-doc { background: rgba(76,175,80,.12); color: #1B5E20; }
+    .sig-card .sc-body { font-size: 12px; color: var(--md-sys-color-on-surface-variant); line-height: 1.5; }
+
+    /* ── TWO COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+    /* ── OVERDUE HIGHLIGHT ── */
+    tr.overdue-row td { background: #FFF5F5; }
+    tr.overdue-row td:first-child { border-left: 3px solid var(--md-sys-color-error); }
+  </style>
+</head>
+<body>
+
+<!-- APP BAR -->
+<header class="app-bar">
+  <span class="logo">ILIA</span>
+  <div class="divider"></div>
+  <span class="page-title">Death Benefit Reduction — Automation</span>
+  <span class="pill">🔬 Prototype</span>
+  <span class="material-symbols-outlined icon-btn" title="Notifications">notifications</span>
+  <span class="material-symbols-outlined icon-btn" title="Search">search</span>
+  <div class="avatar">JA</div>
+</header>
+
+<!-- SHELL -->
+<div class="shell">
+
+  <!-- NAV RAIL -->
+  <nav class="nav-rail">
+    <div class="nav-item" onclick="setNav(this,'dashboard')">
+      <span class="material-symbols-outlined">dashboard</span>
+      Dashboard
+    </div>
+    <div class="nav-item active" onclick="setNav(this,'dbr')">
+      <span class="material-symbols-outlined">policy</span>
+      DBR
+    </div>
+    <div class="nav-item" onclick="setNav(this,'cases')">
+      <span class="material-symbols-outlined">folder_open</span>
+      Cases
+    </div>
+    <div class="nav-item" onclick="setNav(this,'trustees')">
+      <span class="material-symbols-outlined">gavel</span>
+      Trustees
+    </div>
+    <div class="nav-item" onclick="setNav(this,'docs')">
+      <span class="material-symbols-outlined">description</span>
+      Docs
+    </div>
+    <div class="nav-item" onclick="setNav(this,'reports')">
+      <span class="material-symbols-outlined">bar_chart</span>
+      Reports
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main" id="main">
+
+    <!-- TABS -->
+    <div class="tabs-bar">
+      <div class="tab active" onclick="setTab(this,'workflow')">DBR Workflow</div>
+      <div class="tab" onclick="setTab(this,'queue')">Admin Processing Queue</div>
+      <div class="tab" onclick="setTab(this,'ceremonies')">Signing Ceremonies</div>
+    </div>
+
+    <!-- ═══════════════════ TAB: WORKFLOW ═══════════════════ -->
+    <div class="view active" id="view-workflow">
+
+      <div class="page-header">
+        <div>
+          <h1>DBR Workflow — 13 Stages</h1>
+          <p>End-to-end Death Benefit Reduction process · Policy Years 11–15 · 4 Signing Ceremonies</p>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn-outlined">Export PDF</button>
+          <button class="btn-filled"><span class="material-symbols-outlined" style="font-size:18px;">add</span> New DBR Case</button>
+        </div>
+      </div>
+
+      <!-- Signing ceremony summary -->
+      <div class="sig-grid">
+        <div class="sig-card c1">
+          <div class="sc-num">SIGNING CEREMONY #1</div>
+          <div class="sc-title">Client / Insured</div>
+          <div class="sc-doc">DBR Election Form</div>
+          <div class="sc-body">Client selects YES or NO for death benefit reduction on the election form top section.</div>
+        </div>
+        <div class="sig-card c2">
+          <div class="sc-num">SIGNING CEREMONY #2</div>
+          <div class="sc-title">Settlor</div>
+          <div class="sc-doc">Hold Harmless Section</div>
+          <div class="sc-body">Settlor (or entity authorized rep) signs the Hold Harmless & Indemnification section — always required regardless of YES/NO.</div>
+        </div>
+        <div class="sig-card c3">
+          <div class="sc-num">SIGNING CEREMONY #3</div>
+          <div class="sc-title">Trustee (NIW)</div>
+          <div class="sc-doc">Carrier Policy Change Form</div>
+          <div class="sc-body">NIW Trust Services signs the Owner/Trust authorization section to approve and authorize the policy modification.</div>
+        </div>
+        <div class="sig-card c4">
+          <div class="sc-num">SIGNING CEREMONY #4</div>
+          <div class="sc-title">Bank Authorized Signer</div>
+          <div class="sc-doc">Carrier Policy Change Form</div>
+          <div class="sc-body">Bank signer authorizes. One notary cert can cover multiple DBR transactions in batch. NOT sent the Election Form.</div>
+        </div>
+      </div>
+
+      <!-- MAIN FLOW DIAGRAM -->
+      <div class="workflow-wrap">
+        <div class="workflow-title">Full DBR Process Flow</div>
+        <div class="workflow-sub">Hover a stage for details · Dashed border = Signing Ceremony · Orange dot = client action · Purple = trustee · Green = carrier</div>
+
+        <div class="flow-wrap">
+          <div style="min-width:1100px;">
+
+            <!-- ROW 1: Stages 1–7 -->
+            <div style="display:flex; align-items:flex-start; gap:0; margin-bottom:0;">
+
+              <div class="stage-node s-auto" title="ILIA auto-identifies policies in Years 11-15. Evaluates anniversary date, DBR year, current DB, planned reduction amount.">
+                <div class="s-num">STAGE 1</div>
+                <div class="s-icon">🔍</div>
+                <div class="s-name">DBR Event<br>Identification</div>
+                <div class="s-desc">ILIA auto-detects<br>Yrs 11–15</div>
+              </div>
+              <div class="arrow-h"><span class="material-symbols-outlined">arrow_forward</span></div>
+
+              <div class="stage-node s-notify" title="Automated notices at 90/60/30 days. Client receives upcoming DBR notice, estimated reduction, current DB, impact explanation. No signatures.">
+                <div class="s-num">STAGE 2</div>
+                <div class="s-icon">📬</div>
+                <div class="s-name">Pre-Notification<br>Workflow</div>
+                <div class="s-desc">90/60/30 day<br>auto-notices</div>
+              </div>
+              <div class="arrow-h"><span class="material-symbols-outlined">arrow_forward</span></div>
+
+              <div class="stage-node s-client" title="Client decides YES or NO in ILIA (not DocuSign). LifeLink/eSign does not allow client interaction. Decision captured in Election Form.">
+                <div class="s-num">STAGE 3</div>
+                <div class="s-icon">✋</div>
+                <div class="s-name">Client<br>Decision</div>
+                <div class="s-desc">YES / NO<br>in ILIA</div>
+              </div>
+              <div class="arrow-h"><span class="material-symbols-outlined">arrow_forward</span></div>
+
+              <div class="stage-node s-doc" title="Doc: NIW – DB Reduction Final Revision. ILIA populates: Policy#, Current DB, Reduction Amount, New DB, Client Name, Trust Name. Client selects Yes/No checkbox.">
+                <div class="s-num">STAGE 4</div>
+                <div class="s-icon">📄</div>
+                <div class="s-name">Document 1<br>Election Form</div>
+                <div class="s-desc">ILIA auto-fills<br>policy data</div>
+              </div>
+              <div class="arrow-h"><span class="material-symbols-outlined">arrow_forward</span></div>
+
+              <div class="stage-node s-sig1 sig" title="SIGNING CEREMONY #1 — Client/Insured signs the top election section (YES or NO decision) on DBR Election Form.">
+                <div class="s-num">STAGE 5</div>
+                <div class="s-icon">✍️</div>
+                <div class="s-name">Client Signs<br>Election</div>
+                <div class="s-desc">Ceremony #1</div>
+                <div class="sig-badge-inline c1">✍ CEREMONY 1</div>
+              </div>
+              <div class="arrow-h"><span class="material-symbols-outlined">arrow_forward</span></div>
+
+              <div class="stage-node s-sig2" title="Hold Harmless always required — regardless of YES or NO. Scenario A: Insured=Settlor → client signs both. Scenario B: Insured≠Settlor → routes to Settlor. Settlor can be individual or entity.">
+                <div class="s-num">STAGE 6</div>
+                <div class="s-icon">🛡️</div>
+                <div class="s-name">Hold Harmless<br>Routing</div>
+                <div class="s-desc">ILIA logic:<br>Insured = Settlor?</div>
+              </div>
+              <div class="arrow-h"><span class="material-symbols-outlined">arrow_forward</span></div>
+
+              <div class="stage-node s-sig2 sig" title="SIGNING CEREMONY #2 — Settlor (or authorized rep if entity) signs Hold Harmless & Indemnification section — Provident Trust Group, LLC.">
+                <div class="s-num">STAGE 7</div>
+                <div class="s-icon">✍️</div>
+                <div class="s-name">Settlor Signs<br>Hold Harmless</div>
+                <div class="s-desc">Ceremony #2</div>
+                <div class="sig-badge-inline c2">✍ CEREMONY 2</div>
+              </div>
+
+            </div><!-- /row1 -->
+
+            <!-- DOWNWARD ARROW -->
+            <div style="display:flex; justify-content:flex-end; padding-right:0; margin: 4px 0;">
+              <div style="width:120px; display:flex; justify-content:center;">
+                <span class="material-symbols-outlined" style="color:var(--md-sys-color-outline); font-size:22px; transform:rotate(90deg);">arrow_forward</span>
+              </div>
+            </div>
+
+            <!-- ROW 2: Stages 8–13 reversed (right to left visually bottom row) -->
+            <div style="display:flex; align-items:flex-start; gap:0; flex-direction: row-reverse; margin-bottom:0;">
+
+              <div class="stage-node s-confirm" title="Carrier issues confirmation: Client Name, Policy#, Reduction Amount, New DB. Admin uploads to ILIA → Client Documents/Renewal Folder. ILIA updates: Death Benefit, DBR History, Policy Breakdown.">
+                <div class="s-num">STAGE 13</div>
+                <div class="s-icon">✅</div>
+                <div class="s-name">Carrier<br>Confirmation</div>
+                <div class="s-desc">ILIA updates DB<br>+ history</div>
+              </div>
+              <div class="arrow-h" style="transform:rotate(180deg);"><span class="material-symbols-outlined">arrow_forward</span></div>
+
+              <div class="stage-node s-carrier" title="Documents sent to Carrier after bank signatures. Processing time: 2–4 weeks. No signatures at this stage.">
+                <div class="s-num">STAGE 12</div>
+                <div class="s-icon">📤</div>
+                <div class="s-name">Carrier<br>Submission</div>
+                <div class="s-desc">2–4 week<br>processing</div>
+              </div>
+              <div class="arrow-h" style="transform:rotate(180deg);"><span class="material-symbols-outlined">arrow_forward</span></div>
+
+              <div class="stage-node s-sig4 sig" title="SIGNING CEREMONY #4 — Bank Authorized Signer signs Carrier Policy Change Form ONLY (NOT the election form). After signing, bank notarizes in batch.">
+                <div class="s-num">STAGE 11</div>
+                <div class="s-icon">🏦</div>
+                <div class="s-name">Bank Signs<br>Carrier Form</div>
+                <div class="s-desc">Ceremony #4</div>
+                <div class="sig-badge-inline c4">✍ CEREMONY 4</div>
+              </div>
+              <div class="arrow-h" style="transform:rotate(180deg);"><span class="material-symbols-outlined">arrow_forward</span></div>
+
+              <div class="stage-node s-admin" title="After Trustee signs, moves to NIW Admin Review Queue. Admin verifies: Client election, Settlor sig, Trustee sig, Correct DBR values. Admin action: Approve or Reject. No signatures.">
+                <div class="s-num">STAGE 10</div>
+                <div class="s-icon">🔎</div>
+                <div class="s-name">NIW Admin<br>QC Review</div>
+                <div class="s-desc">Approve or<br>Reject</div>
+              </div>
+              <div class="arrow-h" style="transform:rotate(180deg);"><span class="material-symbols-outlined">arrow_forward</span></div>
+
+              <div class="stage-node s-sig3 sig" title="SIGNING CEREMONY #3 — Trustee (NIW Trust Services) signs Owner/Trust authorization section on Carrier Policy Change Form. ILIA populates: Policy#, Insured Name, Trust Name, Reduction Amount, Revised DB.">
+                <div class="s-num">STAGE 9</div>
+                <div class="s-icon">✍️</div>
+                <div class="s-name">Trustee Signs<br>Carrier Form</div>
+                <div class="s-desc">Ceremony #3</div>
+                <div class="sig-badge-inline c3">✍ CEREMONY 3</div>
+              </div>
+              <div class="arrow-h" style="transform:rotate(180deg);"><span class="material-symbols-outlined">arrow_forward</span></div>
+
+              <div class="stage-node s-trustee" title="Trustee receives: DBR Election Form (reference only) + Carrier Policy Change Form. Carrier forms: National Life (available), Allianz (coming soon). No signatures at this stage.">
+                <div class="s-num">STAGE 8</div>
+                <div class="s-icon">🏛️</div>
+                <div class="s-name">Trustee<br>Review</div>
+                <div class="s-desc">Receives carrier<br>change form</div>
+              </div>
+              <div class="arrow-h" style="transform:rotate(180deg);"><span class="material-symbols-outlined">arrow_forward</span></div>
+
+              <!-- SPACER to align stage 8 under stage 7 -->
+              <div style="width:120px; flex-shrink:0;"></div>
+
+            </div><!-- /row2 -->
+
+          </div>
+        </div><!-- /flow-wrap -->
+
+        <!-- LEGEND -->
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#4285F4;"></div>Auto / System</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#FFC107;"></div>Client Action</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#FF6B6B; border:1.5px dashed #E91E63;"></div>Signing Ceremony</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#673AB7;"></div>Trustee</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#2A62E4;"></div>NIW Admin</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#18A862;"></div>Carrier</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#4CAF50;"></div>Bank</div>
+        </div>
+      </div>
+
+      <!-- KEY BUSINESS RULES -->
+      <div class="two-col">
+        <div class="card" style="margin:0;">
+          <div class="card-header"><h2>Key Business Rules</h2></div>
+          <div style="padding:16px;">
+            <table>
+              <tbody>
+                <tr><td style="padding:8px 12px;font-size:13px;">📅</td><td style="padding:8px;font-size:13px;">DBR available <strong>Policy Years 11–15 only</strong></td></tr>
+                <tr><td style="padding:8px 12px;font-size:13px;">🚫</td><td style="padding:8px;font-size:13px;">After Year 15: DBR <strong>no longer available</strong></td></tr>
+                <tr><td style="padding:8px 12px;font-size:13px;">🛡️</td><td style="padding:8px;font-size:13px;">Hold Harmless <strong>always required</strong> (YES or NO)</td></tr>
+                <tr><td style="padding:8px 12px;font-size:13px;">🏦</td><td style="padding:8px;font-size:13px;">Bank receives <strong>Carrier Form ONLY</strong> — not Election Form</td></tr>
+                <tr><td style="padding:8px 12px;font-size:13px;">💻</td><td style="padding:8px;font-size:13px;">Client decision in <strong>ILIA</strong> — not DocuSign/LifeLink</td></tr>
+                <tr><td style="padding:8px 12px;font-size:13px;">📝</td><td style="padding:8px;font-size:13px;">One bank notary cert covers <strong>multiple DBR transactions</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card" style="margin:0;">
+          <div class="card-header"><h2>Carrier Form Status</h2></div>
+          <div style="padding:16px;">
+            <table>
+              <tbody>
+                <tr>
+                  <td style="padding:10px 12px;font-size:13px;"><strong>National Life Group</strong></td>
+                  <td style="padding:10px 8px;"><span class="badge complete">✅ Available in ILIA</span></td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 12px;font-size:13px;"><strong>Allianz</strong></td>
+                  <td style="padding:10px 8px;"><span class="badge awaiting">⚠ In Progress — Marissa</span></td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 12px;font-size:13px;"><strong>Minnesota Life</strong></td>
+                  <td style="padding:10px 8px;"><span class="badge" style="background:#f5f5f5;color:#555;">Phase 2 — Offline</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /view-workflow -->
+
+    <!-- ═══════════════════ TAB: QUEUE ═══════════════════ -->
+    <div class="view" id="view-queue">
+
+      <div class="page-header">
+        <div>
+          <h1>Admin Processing Queue</h1>
+          <p>Active DBR cases requiring action · Updated May 27, 2026</p>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn-outlined">Export CSV</button>
+          <button class="btn-filled"><span class="material-symbols-outlined" style="font-size:18px;">add</span> New DBR Case</button>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="label">ACTIVE CASES</div>
+          <div class="value">24</div>
+          <div class="delta up"><span class="material-symbols-outlined" style="font-size:14px;">trending_up</span>+3 this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">AWAITING CLIENT SIG</div>
+          <div class="value" style="color:#E91E63;">7</div>
+          <div class="delta warn"><span class="material-symbols-outlined" style="font-size:14px;">pending</span>Ceremony #1</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">AT TRUSTEE REVIEW</div>
+          <div class="value" style="color:#3F51B5;">5</div>
+          <div class="delta"><span class="material-symbols-outlined" style="font-size:14px;">gavel</span>Stages 8–9</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">NIW QC PENDING</div>
+          <div class="value" style="color:var(--md-sys-color-primary);">4</div>
+          <div class="delta warn"><span class="material-symbols-outlined" style="font-size:14px;">warning</span>2 overdue</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">AT CARRIER</div>
+          <div class="value" style="color:var(--ilia-success);">8</div>
+          <div class="delta up"><span class="material-symbols-outlined" style="font-size:14px;">upload</span>Awaiting confirm</div>
+        </div>
+      </div>
+
+      <!-- Alerts -->
+      <div class="alert-row">
+        <div class="alert-card warn">
+          <span class="material-symbols-outlined">warning</span>
+          <div>
+            <div class="a-title">2 Cases Overdue — NIW Admin QC</div>
+            <div class="a-body">Cases LS2291847 and LS2284723 have been in QC stage for 5+ business days. Review required before carrier submission window closes.</div>
+          </div>
+        </div>
+        <div class="alert-card info">
+          <span class="material-symbols-outlined">info</span>
+          <div>
+            <div class="a-title">Allianz Carrier Form Pending — 3 Cases Held</div>
+            <div class="a-body">Cases for Allianz policies cannot proceed to Trustee signing until the Allianz form integration is complete (ETA TBD — Marissa).</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-row">
+        <div class="search-box">
+          <span class="material-symbols-outlined" style="font-size:18px;color:var(--md-sys-color-outline);">search</span>
+          <input type="text" placeholder="Search by client name, policy#, or trust ID…" />
+        </div>
+        <div class="chip-filter active">All Stages</div>
+        <div class="chip-filter">Needs Action</div>
+        <div class="chip-filter">Awaiting Sig</div>
+        <div class="chip-filter">At Carrier</div>
+        <div class="chip-filter">Overdue</div>
+      </div>
+
+      <!-- Queue Table -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Active DBR Queue <span style="color:var(--md-sys-color-on-surface-variant);font-weight:400;font-size:14px;">— 24 cases</span></h2>
+          <button class="btn-outlined" style="font-size:12px;padding:6px 14px;">Batch Actions</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>CLIENT / POLICY</th>
+              <th>TRUST ID</th>
+              <th>CARRIER</th>
+              <th>DBR YEAR</th>
+              <th>CURRENT STAGE</th>
+              <th>NEXT ACTION</th>
+              <th>DAYS IN STAGE</th>
+              <th>ASSIGNED TO</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="overdue-row">
+              <td><div style="font-weight:500;">Robert J. Hendricks</div><div class="mono">LS2291847</div></td>
+              <td class="mono">TR-20130415</td>
+              <td>National Life</td>
+              <td>Year 12</td>
+              <td><span class="badge stage-10">Stage 10 — NIW QC</span></td>
+              <td><span class="badge overdue">⚠ QC Overdue</span></td>
+              <td style="color:var(--md-sys-color-error);font-weight:600;">7 days</td>
+              <td>Sarah M.</td>
+              <td><a class="action-link">Review →</a></td>
+            </tr>
+            <tr class="overdue-row">
+              <td><div style="font-weight:500;">Patricia L. Weston</div><div class="mono">LS2284723</div></td>
+              <td class="mono">TR-20130201</td>
+              <td>National Life</td>
+              <td>Year 12</td>
+              <td><span class="badge stage-10">Stage 10 — NIW QC</span></td>
+              <td><span class="badge overdue">⚠ QC Overdue</span></td>
+              <td style="color:var(--md-sys-color-error);font-weight:600;">5 days</td>
+              <td>Sarah M.</td>
+              <td><a class="action-link">Review →</a></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:500;">Michael T. Garza</div><div class="mono">LS2307412</div></td>
+              <td class="mono">TR-20140822</td>
+              <td>National Life</td>
+              <td>Year 11</td>
+              <td><span class="badge stage-5">Stage 5 — Client Sig</span></td>
+              <td><span class="badge awaiting">Awaiting Ceremony #1</span></td>
+              <td>3 days</td>
+              <td>Tom R.</td>
+              <td><a class="action-link">Open →</a></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:500;">Linda K. Freeman</div><div class="mono">LS2301985</div></td>
+              <td class="mono">TR-20140610</td>
+              <td>National Life</td>
+              <td>Year 11</td>
+              <td><span class="badge stage-7">Stage 7 — Settlor Sig</span></td>
+              <td><span class="badge awaiting">Awaiting Ceremony #2</span></td>
+              <td>2 days</td>
+              <td>Tom R.</td>
+              <td><a class="action-link">Open →</a></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:500;">James A. Morrison</div><div class="mono">LS2299034</div></td>
+              <td class="mono">TR-20140405</td>
+              <td>National Life</td>
+              <td>Year 11</td>
+              <td><span class="badge stage-9">Stage 9 — Trustee Sig</span></td>
+              <td><span class="badge in-progress">Ceremony #3 Sent</span></td>
+              <td>1 day</td>
+              <td>Lisa B.</td>
+              <td><a class="action-link">Open →</a></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:500;">Carol D. Nguyen</div><div class="mono">LS2288571</div></td>
+              <td class="mono">TR-20130918</td>
+              <td>National Life</td>
+              <td>Year 12</td>
+              <td><span class="badge stage-11">Stage 11 — Bank Sig</span></td>
+              <td><span class="badge awaiting">Awaiting Ceremony #4</span></td>
+              <td>2 days</td>
+              <td>Lisa B.</td>
+              <td><a class="action-link">Open →</a></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:500;">David R. Kim</div><div class="mono">LS2293768</div></td>
+              <td class="mono">TR-20130710</td>
+              <td>Allianz</td>
+              <td>Year 12</td>
+              <td><span class="badge stage-8">Stage 8 — Trustee Rev.</span></td>
+              <td><span class="badge" style="background:#FFF3E0;color:#7A4100;">Allianz Form Pending</span></td>
+              <td>8 days</td>
+              <td>Unassigned</td>
+              <td><a class="action-link">Open →</a></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:500;">Susan M. Patel</div><div class="mono">LS2311290</div></td>
+              <td class="mono">TR-20150314</td>
+              <td>National Life</td>
+              <td>Year 11</td>
+              <td><span class="badge stage-2">Stage 2 — Pre-Notify</span></td>
+              <td><span class="badge in-progress">60-Day Notice Sent</span></td>
+              <td>0 days</td>
+              <td>System</td>
+              <td><a class="action-link">Open →</a></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:500;">Thomas W. Evans</div><div class="mono">LS2279844</div></td>
+              <td class="mono">TR-20121105</td>
+              <td>National Life</td>
+              <td>Year 13</td>
+              <td><span class="badge stage-12">Stage 12 — At Carrier</span></td>
+              <td><span class="badge in-progress">Submitted — Wk 2</span></td>
+              <td>12 days</td>
+              <td>Lisa B.</td>
+              <td><a class="action-link">Track →</a></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:500;">Jennifer R. Cole</div><div class="mono">LS2264502</div></td>
+              <td class="mono">TR-20111230</td>
+              <td>National Life</td>
+              <td>Year 14</td>
+              <td><span class="badge stage-13">Stage 13 — Confirmed</span></td>
+              <td><span class="badge complete">✅ Upload Confirmation</span></td>
+              <td>0 days</td>
+              <td>Sarah M.</td>
+              <td><a class="action-link">Upload →</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Bottom action row -->
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--md-sys-color-on-surface-variant);">
+        <span>Showing 10 of 24 cases · <a class="action-link">Load more</a></span>
+        <span>Last refreshed: 9:42 AM · <a class="action-link">Refresh</a></span>
+      </div>
+
+    </div><!-- /view-queue -->
+
+    <!-- ═══════════════════ TAB: CEREMONIES ═══════════════════ -->
+    <div class="view" id="view-ceremonies">
+
+      <div class="page-header">
+        <div>
+          <h1>Signing Ceremonies — Workflow Details</h1>
+          <p>4 signing ceremonies across the DBR process · Each with distinct documents, signers, and routing logic</p>
+        </div>
+      </div>
+
+      <!-- Ceremony #1 -->
+      <div class="card">
+        <div class="card-header" style="background:#FCE4EC; border-bottom-color:#F48FB1;">
+          <h2 style="color:#880E4F;">✍ Ceremony #1 — Client / Insured Election</h2>
+          <span class="badge" style="background:#E91E63;color:#fff;">Stage 5</span>
+        </div>
+        <div style="padding:20px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">DOCUMENT</div>
+            <div style="font-size:13px;font-weight:500;">NIW – DB Reduction Final Revision</div>
+            <div style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-top:4px;">Section: Top election section</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">SIGNER</div>
+            <div style="font-size:13px;font-weight:500;">Client / Insured</div>
+            <div style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-top:4px;">Platform: ILIA (not DocuSign)</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">ACTION</div>
+            <div style="font-size:13px;font-weight:500;">Selects YES or NO checkbox</div>
+            <div style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-top:4px;">ILIA captures decision + timestamp</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ceremony #2 -->
+      <div class="card">
+        <div class="card-header" style="background:#F3E5F5; border-bottom-color:#CE93D8;">
+          <h2 style="color:#4A148C;">✍ Ceremony #2 — Settlor Hold Harmless</h2>
+          <span class="badge" style="background:#9C27B0;color:#fff;">Stage 7</span>
+        </div>
+        <div style="padding:20px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">DOCUMENT</div>
+            <div style="font-size:13px;font-weight:500;">Hold Harmless & Indemnification</div>
+            <div style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-top:4px;">As to Provident Trust Group, LLC</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">SIGNER — ILIA ROUTING LOGIC</div>
+            <div style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-top:4px;line-height:1.6;">
+              <strong>Scenario A</strong> — Insured IS Settlor:<br/>Client signs both election + hold harmless<br/><br/>
+              <strong>Scenario B</strong> — Insured NOT Settlor:<br/>Client signs election → routes to Settlor<br/><br/>
+              <strong>Entity Settlor:</strong> ILIA uses stored Authorized Signer Name + Email
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">RULES</div>
+            <div style="font-size:12px;color:var(--md-sys-color-on-surface-variant);line-height:1.6;">
+              Always required — regardless of YES or NO client decision.<br/><br/>
+              Settlor can be Individual or Entity.<br/><br/>
+              Both ceremonies can be combined if Insured = Settlor.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ceremony #3 -->
+      <div class="card">
+        <div class="card-header" style="background:#E8EAF6; border-bottom-color:#9FA8DA;">
+          <h2 style="color:#1A237E;">✍ Ceremony #3 — Trustee Authorization</h2>
+          <span class="badge" style="background:#3F51B5;color:#fff;">Stage 9</span>
+        </div>
+        <div style="padding:20px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">DOCUMENT</div>
+            <div style="font-size:13px;font-weight:500;">Carrier Policy Change Form</div>
+            <div style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-top:4px;">Section: Owner/Trust authorization</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">SIGNER</div>
+            <div style="font-size:13px;font-weight:500;">Trustee — NIW Trust Services</div>
+            <div style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-top:4px;">Approves DBR + authorizes policy modification</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">ILIA POPULATES</div>
+            <div style="font-size:12px;color:var(--md-sys-color-on-surface-variant);line-height:1.7;">
+              Policy # · Insured Name<br/>Trust Name · Reduction Amount<br/>Revised Death Benefit
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ceremony #4 -->
+      <div class="card">
+        <div class="card-header" style="background:#E8F5E9; border-bottom-color:#A5D6A7;">
+          <h2 style="color:#1B5E20;">✍ Ceremony #4 — Bank Authorization</h2>
+          <span class="badge" style="background:#4CAF50;color:#fff;">Stage 11</span>
+        </div>
+        <div style="padding:20px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">DOCUMENT</div>
+            <div style="font-size:13px;font-weight:500;">Carrier Policy Change Form ONLY</div>
+            <div style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-top:4px;color:#880E4F;font-weight:500;">⚠ NOT the DBR Election Form</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">SIGNER</div>
+            <div style="font-size:13px;font-weight:500;">Bank Authorized Signer</div>
+            <div style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-top:4px;">ILIA stores: Bank Name, Signer Name, Signer Email</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">NOTARIZATION</div>
+            <div style="font-size:12px;color:var(--md-sys-color-on-surface-variant);line-height:1.6;">
+              After signing, bank notarizes documents in batch.<br/><br/>
+              <strong>One notary cert can cover multiple DBR transactions</strong> — batch processing supported.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /view-ceremonies -->
+
+  </main>
+</div>
+
+<!-- PROTOTYPE BANNER -->
+<div class="proto-banner">
+  🔬 ILIA Prototype — DBR Automation · NIW Companies / Simplicity Group · Not production code · May 2026
+</div>
+
+<script>
+  function setTab(el, id) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('view-' + id).classList.add('active');
+  }
+  function setNav(el, id) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+  }
+  // Chip filters
+  document.querySelectorAll('.chip-filter').forEach(chip => {
+    chip.addEventListener('click', function() {
+      document.querySelectorAll('.chip-filter').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
