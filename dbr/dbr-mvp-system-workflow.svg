@@ -1,0 +1,137 @@
+<svg width="680" viewBox="0 0 680 920" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>DBR MVP — System Workflow</title>
+  <desc>End-to-end workflow showing how ILIA, LifeLink, and the client interact across the DBR MVP process, from policy identification through to Marissa's action queue in Tranche Management.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <style>
+      text { font-family: Arial, sans-serif; fill: #1a1a1a; }
+      .th  { font-size: 13px; font-weight: 600; }
+      .ts  { font-size: 11px; fill: #444; }
+      .arr { stroke: #555; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+      .leader { stroke: #999; stroke-width: 0.5; stroke-dasharray: 4 3; fill: none; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="680" height="920" fill="#ffffff"/>
+
+  <!-- ── LANE HEADER BACKGROUNDS ── -->
+  <rect x="20" y="20" width="190" height="34" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="0.5"/>
+  <rect x="245" y="20" width="190" height="34" rx="8" fill="#ccfbf1" stroke="#14b8a6" stroke-width="0.5"/>
+  <rect x="470" y="20" width="190" height="34" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="0.5"/>
+
+  <text class="th" x="115" y="41" text-anchor="middle" fill="#1e40af">ILIA</text>
+  <text class="th" x="340" y="41" text-anchor="middle" fill="#0f766e">LifeLink (LL)</text>
+  <text class="th" x="565" y="41" text-anchor="middle" fill="#5b21b6">Client / Settlor</text>
+
+  <!-- Lane guide lines -->
+  <line x1="115" y1="54" x2="115" y2="755" stroke="#ccc" stroke-width="0.5" stroke-dasharray="4 4"/>
+  <line x1="340" y1="54" x2="340" y2="755" stroke="#ccc" stroke-width="0.5" stroke-dasharray="4 4"/>
+  <line x1="565" y1="54" x2="565" y2="755" stroke="#ccc" stroke-width="0.5" stroke-dasharray="4 4"/>
+
+  <!-- ══ STEP 1 ══ -->
+  <rect x="20" y="76" width="190" height="54" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="0.5"/>
+  <text class="th" x="115" y="97" text-anchor="middle" fill="#1e40af">1. Identify eligible cases</text>
+  <text class="ts" x="115" y="115" text-anchor="middle">Years 11–15 · exclusion check</text>
+
+  <!-- ══ STEP 2 ══ -->
+  <line x1="115" y1="130" x2="115" y2="152" class="arr"/>
+  <rect x="20" y="152" width="190" height="54" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="0.5"/>
+  <text class="th" x="115" y="172" text-anchor="middle" fill="#1e40af">2. Pre-populate form data</text>
+  <text class="ts" x="115" y="190" text-anchor="middle">Policy # · DB · Amount · Dates</text>
+
+  <!-- Cross-lane: ILIA → LL -->
+  <line x1="210" y1="179" x2="243" y2="179" class="arr"/>
+  <text class="ts" x="226" y="173" text-anchor="middle">triggers</text>
+
+  <!-- ══ STEP 3 ══ -->
+  <rect x="245" y="152" width="190" height="54" rx="8" fill="#ccfbf1" stroke="#14b8a6" stroke-width="0.5"/>
+  <text class="th" x="340" y="172" text-anchor="middle" fill="#0f766e">3. Generate eSign form</text>
+  <text class="ts" x="340" y="190" text-anchor="middle">FormBuilder · pre-filled fields</text>
+
+  <!-- ══ STEP 4 ══ -->
+  <line x1="340" y1="206" x2="340" y2="228" class="arr"/>
+  <rect x="245" y="228" width="190" height="54" rx="8" fill="#ccfbf1" stroke="#14b8a6" stroke-width="0.5"/>
+  <text class="th" x="340" y="248" text-anchor="middle" fill="#0f766e">4. Send DBR email notice</text>
+  <text class="ts" x="340" y="266" text-anchor="middle">Client + all Settlor signers</text>
+
+  <!-- Cross-lane: LL → Client -->
+  <line x1="435" y1="255" x2="468" y2="255" class="arr"/>
+  <text class="ts" x="451" y="249" text-anchor="middle">email</text>
+
+  <!-- ══ STEP 5 ══ -->
+  <rect x="470" y="228" width="190" height="54" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="0.5"/>
+  <text class="th" x="565" y="248" text-anchor="middle" fill="#5b21b6">5. Client receives notice</text>
+  <text class="ts" x="565" y="266" text-anchor="middle">Email w/ eSign link</text>
+
+  <!-- ══ STEP 6 ══ -->
+  <line x1="565" y1="282" x2="565" y2="304" class="arr"/>
+  <rect x="470" y="304" width="190" height="54" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="0.5"/>
+  <text class="th" x="565" y="324" text-anchor="middle" fill="#5b21b6">6. Open form (web / mobile)</text>
+  <text class="ts" x="565" y="342" text-anchor="middle">Reviews DBR details</text>
+
+  <!-- ══ STEP 7 ══ -->
+  <line x1="565" y1="358" x2="565" y2="380" class="arr"/>
+  <rect x="470" y="380" width="190" height="54" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="0.5"/>
+  <text class="th" x="565" y="400" text-anchor="middle" fill="#5b21b6">7. YES / NO election + sign</text>
+  <text class="ts" x="565" y="418" text-anchor="middle">eSign via LL</text>
+
+  <!-- ══ STEP 8 ══ -->
+  <line x1="565" y1="434" x2="565" y2="456" class="arr"/>
+  <rect x="470" y="456" width="190" height="54" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="0.5"/>
+  <text class="th" x="565" y="476" text-anchor="middle" fill="#5b21b6">8. Settlor signs</text>
+  <text class="ts" x="565" y="494" text-anchor="middle">Hold Harmless section</text>
+
+  <!-- Cross-lane: Client → LL -->
+  <path d="M470 483 L340 483" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text class="ts" x="405" y="477" text-anchor="middle">form complete</text>
+
+  <!-- ══ STEP 9 ══ -->
+  <line x1="340" y1="510" x2="340" y2="530" class="arr"/>
+  <rect x="245" y="530" width="190" height="54" rx="8" fill="#ccfbf1" stroke="#14b8a6" stroke-width="0.5"/>
+  <text class="th" x="340" y="550" text-anchor="middle" fill="#0f766e">9. Capture completion</text>
+  <text class="ts" x="340" y="568" text-anchor="middle">Election · signatures · timestamp</text>
+
+  <!-- Cross-lane: LL → ILIA -->
+  <path d="M245 557 L212 557" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text class="ts" x="228" y="551" text-anchor="middle">callback</text>
+
+  <!-- ══ STEP 10 ══ -->
+  <rect x="20" y="530" width="190" height="54" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="0.5"/>
+  <text class="th" x="115" y="550" text-anchor="middle" fill="#1e40af">10. Store response in ILIA</text>
+  <text class="ts" x="115" y="568" text-anchor="middle">Case record · signed doc</text>
+
+  <!-- ══ STEP 11 ══ -->
+  <line x1="115" y1="584" x2="115" y2="606" class="arr"/>
+  <rect x="20" y="606" width="190" height="54" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="0.5"/>
+  <text class="th" x="115" y="626" text-anchor="middle" fill="#1e40af">11. Update Tranche view</text>
+  <text class="ts" x="115" y="644" text-anchor="middle">DBR status · YES / NO flag</text>
+
+  <!-- ══ STEP 12 — Marissa ══ -->
+  <line x1="115" y1="660" x2="115" y2="682" class="arr"/>
+  <rect x="20" y="682" width="190" height="54" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="0.5"/>
+  <text class="th" x="115" y="702" text-anchor="middle" fill="#92400e">12. Marissa reviews queue</text>
+  <text class="ts" x="115" y="720" text-anchor="middle">Tranche Mgmt · manual action</text>
+
+  <!-- ══ MVP BOUNDARY ══ -->
+  <line x1="20" y1="756" x2="660" y2="756" stroke="#999" stroke-width="1" stroke-dasharray="6 4"/>
+  <text class="ts" x="340" y="772" text-anchor="middle" fill="#888">MVP scope ends here — signing ceremonies, carrier submission, QC queue are post-MVP</text>
+
+  <!-- ══ LEGEND ══ -->
+  <rect x="20" y="790" width="12" height="12" rx="2" fill="#dbeafe" stroke="#3b82f6" stroke-width="0.5"/>
+  <text class="ts" x="38" y="800" fill="#444">ILIA (automated)</text>
+  <rect x="160" y="790" width="12" height="12" rx="2" fill="#ccfbf1" stroke="#14b8a6" stroke-width="0.5"/>
+  <text class="ts" x="178" y="800" fill="#444">LifeLink</text>
+  <rect x="260" y="790" width="12" height="12" rx="2" fill="#ede9fe" stroke="#7c3aed" stroke-width="0.5"/>
+  <text class="ts" x="278" y="800" fill="#444">Client / Settlor</text>
+  <rect x="390" y="790" width="12" height="12" rx="2" fill="#fef3c7" stroke="#d97706" stroke-width="0.5"/>
+  <text class="ts" x="408" y="800" fill="#444">Human action (Marissa)</text>
+
+  <!-- ══ PRE-CONDITIONS BOX ══ -->
+  <rect x="20" y="818" width="640" height="72" rx="8" fill="none" stroke="#bbb" stroke-width="0.5" stroke-dasharray="4 3"/>
+  <text class="th" x="340" y="838" text-anchor="middle" fill="#333">Pre-conditions required before build</text>
+  <text class="ts" x="340" y="858" text-anchor="middle">Marissa: exclusion list of completed DBRs + final email copy + clean DBR form docs</text>
+  <text class="ts" x="340" y="876" text-anchor="middle">Shounak: field availability report confirming all data fields populated in ILIA</text>
+</svg>

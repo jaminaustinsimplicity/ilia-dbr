@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ILIA — Yearly Policy Breakdown · DBR Notice Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<script type="importmap">{"imports":{"@material/web/":"https://esm.run/@material/web/"}}</script>
+<script type="module">
+  import '@material/web/all.js';
+  import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js';
+  document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+</script>
+<style>
+:root {
+  --md-sys-color-primary:#2A62E4;--md-sys-color-on-primary:#FFFFFF;
+  --md-sys-color-primary-container:#DBE1FF;--md-sys-color-on-primary-container:#001257;
+  --md-sys-color-secondary:#565E71;--md-sys-color-on-secondary:#FFFFFF;
+  --md-sys-color-secondary-container:#DBE2F9;--md-sys-color-on-secondary-container:#131C2B;
+  --md-sys-color-tertiary:#1E8E4E;--md-sys-color-on-tertiary:#FFFFFF;
+  --md-sys-color-tertiary-container:#A7F4BC;--md-sys-color-on-tertiary-container:#00210E;
+  --md-sys-color-error:#BA1A1A;--md-sys-color-on-error:#FFFFFF;
+  --md-sys-color-error-container:#FFDAD6;--md-sys-color-on-error-container:#410002;
+  --md-sys-color-surface:#FDFBFF;--md-sys-color-on-surface:#1A1B1F;
+  --md-sys-color-surface-variant:#E1E2EC;--md-sys-color-on-surface-variant:#44464F;
+  --md-sys-color-surface-container-low:#F3F3FA;--md-sys-color-surface-container:#EDEDF4;
+  --md-sys-color-surface-container-high:#E7E8EE;--md-sys-color-background:#FDFBFF;
+  --md-sys-color-on-background:#1A1B1F;--md-sys-color-outline:#74777F;
+  --md-sys-color-outline-variant:#C4C6D0;
+  --ilia-success:#18A862;--ilia-success-container:#C6F5D6;
+  --ilia-warning:#E6A82E;--ilia-warning-container:#FCE9C2;
+  font-family:'Roboto',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#FDFBFF;color:#1A1B1F;padding:24px;max-width:900px;}
+
+.section-title{font-size:16px;font-weight:500;color:#1A1B1F;margin-bottom:16px;}
+
+.year-accordion{border:1px solid var(--md-sys-color-outline-variant);border-radius:12px;overflow:hidden;margin-bottom:16px;}
+.year-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--md-sys-color-surface-container-low);cursor:pointer;user-select:none;}
+.year-label{font-size:14px;font-weight:500;color:#1A1B1F;}
+.chevron{font-size:20px;color:var(--md-sys-color-on-surface-variant);transition:transform .2s;}
+.chevron.open{transform:rotate(180deg);}
+
+.year-body{padding:20px;border-top:1px solid var(--md-sys-color-outline-variant);display:none;}
+.year-body.open{display:block;}
+
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+
+.field-wrap{display:flex;flex-direction:column;gap:4px;}
+.field-label{font-size:11px;font-weight:500;color:var(--md-sys-color-on-surface-variant);text-transform:uppercase;letter-spacing:.5px;}
+.field-value{background:var(--md-sys-color-surface-container);border:1px solid var(--md-sys-color-outline-variant);border-radius:8px;padding:12px 14px;font-size:14px;color:#1A1B1F;}
+.field-hint{font-size:11px;color:var(--md-sys-color-on-surface-variant);margin-top:2px;}
+
+.dbr-row{display:flex;align-items:flex-start;gap:12px;}
+.dbr-field-wrap{flex:1;}
+.dbr-actions{display:flex;flex-direction:column;gap:8px;padding-top:2px;}
+
+.btn-send-dbr{display:inline-flex;align-items:center;gap:6px;background:var(--md-sys-color-primary);color:#fff;border:none;border-radius:20px;padding:10px 18px;font-size:13px;font-weight:500;font-family:'Roboto',sans-serif;cursor:pointer;white-space:nowrap;transition:background .15s,box-shadow .15s;}
+.btn-send-dbr:hover{background:#1a52d4;box-shadow:0 2px 8px rgba(42,98,228,.35);}
+.btn-send-dbr .mat-icon{font-size:16px;line-height:16px;}
+
+.status-chip{display:inline-flex;align-items:center;gap:5px;border-radius:16px;padding:4px 10px;font-size:12px;font-weight:500;}
+.status-chip.sent{background:var(--ilia-warning-container);color:#5a3e00;}
+.status-chip.completed{background:var(--ilia-success-container);color:#004d1f;}
+.status-chip.not-sent{background:var(--md-sys-color-surface-container-high);color:var(--md-sys-color-on-surface-variant);}
+.status-chip .dot{width:7px;height:7px;border-radius:50%;}
+.status-chip.sent .dot{background:var(--ilia-warning);}
+.status-chip.completed .dot{background:var(--ilia-success);}
+.status-chip.not-sent .dot{background:#888;}
+
+.status-meta{font-size:11px;color:var(--md-sys-color-on-surface-variant);margin-top:3px;}
+
+.resend-link{font-size:12px;color:var(--md-sys-color-primary);cursor:pointer;text-decoration:underline;background:none;border:none;font-family:'Roboto',sans-serif;padding:0;}
+.resend-link:hover{color:#1a52d4;}
+
+.dialog-overlay{position:fixed;inset:0;background:rgba(0,0,0,.38);display:none;align-items:center;justify-content:center;z-index:100;}
+.dialog-overlay.open{display:flex;}
+.dialog{background:#fff;border-radius:16px;padding:24px;max-width:380px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.18);}
+.dialog-icon{font-size:28px;color:var(--md-sys-color-primary);margin-bottom:8px;}
+.dialog-title{font-size:16px;font-weight:500;color:#1A1B1F;margin-bottom:8px;}
+.dialog-body{font-size:14px;color:var(--md-sys-color-on-surface-variant);line-height:1.5;margin-bottom:20px;}
+.dialog-body strong{color:#1A1B1F;font-weight:500;}
+.dialog-actions{display:flex;justify-content:flex-end;gap:8px;}
+.btn-cancel{background:none;border:1px solid var(--md-sys-color-outline-variant);border-radius:20px;padding:9px 18px;font-size:13px;font-weight:500;font-family:'Roboto',sans-serif;color:var(--md-sys-color-on-surface-variant);cursor:pointer;}
+.btn-cancel:hover{background:var(--md-sys-color-surface-container);}
+.btn-confirm{background:var(--md-sys-color-primary);border:none;border-radius:20px;padding:9px 18px;font-size:13px;font-weight:500;font-family:'Roboto',sans-serif;color:#fff;cursor:pointer;}
+.btn-confirm:hover{background:#1a52d4;}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#2F3033;color:#F1F0F4;padding:12px 20px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:8px;opacity:0;transition:opacity .25s,transform .3s;pointer-events:none;z-index:200;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast .mat-icon{font-size:18px;color:var(--ilia-success);}
+
+.demo-bar{display:flex;gap:8px;margin-bottom:20px;padding:12px 14px;background:var(--md-sys-color-primary-container);border-radius:10px;align-items:center;}
+.demo-label{font-size:12px;font-weight:500;color:var(--md-sys-color-on-primary-container);margin-right:4px;}
+.demo-btn{background:none;border:1px solid var(--md-sys-color-primary);border-radius:16px;padding:5px 12px;font-size:11px;font-weight:500;font-family:'Roboto',sans-serif;color:var(--md-sys-color-primary);cursor:pointer;}
+.demo-btn.active{background:var(--md-sys-color-primary);color:#fff;}
+</style>
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="demo-label">Preview state:</span>
+  <button class="demo-btn active" onclick="setState('default',this)">Default (not sent)</button>
+  <button class="demo-btn" onclick="setState('sent',this)">Notice sent</button>
+  <button class="demo-btn" onclick="setState('completed',this)">Client completed</button>
+</div>
+
+<div class="section-title">Yearly Policy Breakdown</div>
+
+<div class="year-accordion">
+  <div class="year-header" onclick="toggleYear(this)">
+    <span class="year-label">2036 – 2037 (Year 11)</span>
+    <span class="material-symbols-outlined chevron open">expand_more</span>
+  </div>
+  <div class="year-body open">
+    <div class="field-row">
+      <div class="field-wrap">
+        <span class="field-label">Client Age</span>
+        <div class="field-value">52</div>
+      </div>
+      <div class="field-wrap">
+        <span class="field-label">Contribution Frequency</span>
+        <div class="field-value">Annual</div>
+      </div>
+    </div>
+    <div class="dbr-row">
+      <div class="dbr-field-wrap">
+        <div class="field-wrap">
+          <span class="field-label">Death Benefit Reductions</span>
+          <div class="field-value">$ 125,000.00</div>
+        </div>
+      </div>
+      <div class="dbr-actions">
+        <div id="state-default">
+          <button class="btn-send-dbr" onclick="openConfirm()">
+            <span class="material-symbols-outlined mat-icon">send</span>
+            Send DBR Notice
+          </button>
+          <div class="status-meta" style="text-align:center">Notice not yet sent</div>
+        </div>
+        <div id="state-sent" style="display:none">
+          <span class="status-chip sent"><span class="dot"></span> Notice sent</span>
+          <div class="status-meta">Sent 05/29/2026 · Awaiting client</div>
+          <button class="resend-link" onclick="openResend()">↻ Resend notice</button>
+        </div>
+        <div id="state-completed" style="display:none">
+          <span class="status-chip completed"><span class="dot"></span> Client completed</span>
+          <div class="status-meta">Completed 05/30/2026 · Election: YES</div>
+          <button class="resend-link" style="color:#888;text-decoration:none;cursor:default;">Resend not available</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="year-accordion">
+  <div class="year-header" onclick="toggleYear(this)">
+    <span class="year-label">2026 – 2027 (Year 1)</span>
+    <span class="material-symbols-outlined chevron">expand_more</span>
+  </div>
+  <div class="year-body">
+    <div class="field-row">
+      <div class="field-wrap">
+        <span class="field-label">Client Age</span>
+        <div class="field-value">42</div>
+      </div>
+      <div class="field-wrap">
+        <span class="field-label">Contribution Frequency</span>
+        <div class="field-value">Annual</div>
+      </div>
+    </div>
+    <div class="field-wrap">
+      <span class="field-label">Death Benefit Reductions</span>
+      <div class="field-value">$ 0.00</div>
+      <span class="field-hint">Value cannot be negative.</span>
+    </div>
+  </div>
+</div>
+
+<div class="dialog-overlay" id="confirm-dialog">
+  <div class="dialog">
+    <div class="dialog-icon"><span class="material-symbols-outlined">mark_email_unread</span></div>
+    <div class="dialog-title">Send DBR Notice?</div>
+    <div class="dialog-body">
+      A DBR notice will be sent to <strong>all Settlor authorized signers</strong> on this case with a pre-populated LifeLink eSign form.<br><br>
+      <strong>Policy:</strong> LS2297246 &nbsp;·&nbsp; <strong>DBR Amount:</strong> $125,000<br>
+      <strong>Respond by:</strong> 07/01/2026
+    </div>
+    <div class="dialog-actions">
+      <button class="btn-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-confirm" onclick="confirmSend()">Send notice</button>
+    </div>
+  </div>
+</div>
+
+<div class="dialog-overlay" id="resend-dialog">
+  <div class="dialog">
+    <div class="dialog-icon" style="color:var(--ilia-warning)"><span class="material-symbols-outlined">refresh</span></div>
+    <div class="dialog-title">Resend DBR Notice?</div>
+    <div class="dialog-body">
+      A notice was already sent on <strong>05/29/2026</strong>. Resending will send a new eSign link to all Settlor authorized signers and invalidate the previous link.
+    </div>
+    <div class="dialog-actions">
+      <button class="btn-cancel" onclick="closeResend()">Cancel</button>
+      <button class="btn-confirm" onclick="confirmResend()">Resend notice</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <span class="material-symbols-outlined mat-icon">check_circle</span>
+  <span id="toast-msg">DBR notice sent successfully</span>
+</div>
+
+<script>
+function toggleYear(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
+function setState(state, btn) {
+  document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('state-default').style.display = state === 'default' ? '' : 'none';
+  document.getElementById('state-sent').style.display = state === 'sent' ? '' : 'none';
+  document.getElementById('state-completed').style.display = state === 'completed' ? '' : 'none';
+}
+function openConfirm() { document.getElementById('confirm-dialog').classList.add('open'); }
+function closeConfirm() { document.getElementById('confirm-dialog').classList.remove('open'); }
+function openResend() { document.getElementById('resend-dialog').classList.add('open'); }
+function closeResend() { document.getElementById('resend-dialog').classList.remove('open'); }
+function confirmSend() {
+  closeConfirm();
+  document.getElementById('state-default').style.display = 'none';
+  document.getElementById('state-sent').style.display = '';
+  document.getElementById('state-completed').style.display = 'none';
+  document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.demo-btn')[1].classList.add('active');
+  showToast('DBR notice sent successfully');
+}
+function confirmResend() {
+  closeResend();
+  showToast('DBR notice resent successfully');
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
