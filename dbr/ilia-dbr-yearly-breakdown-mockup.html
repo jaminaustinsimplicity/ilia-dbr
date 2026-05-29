@@ -3,252 +3,497 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>ILIA — Yearly Policy Breakdown · DBR Notice Mockup</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
-<script type="importmap">{"imports":{"@material/web/":"https://esm.run/@material/web/"}}</script>
-<script type="module">
-  import '@material/web/all.js';
-  import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js';
-  document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
-</script>
+<title>ILIA — Yearly Policy Breakdown · DBR Notice</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet"/>
 <style>
-:root {
-  --md-sys-color-primary:#2A62E4;--md-sys-color-on-primary:#FFFFFF;
-  --md-sys-color-primary-container:#DBE1FF;--md-sys-color-on-primary-container:#001257;
-  --md-sys-color-secondary:#565E71;--md-sys-color-on-secondary:#FFFFFF;
-  --md-sys-color-secondary-container:#DBE2F9;--md-sys-color-on-secondary-container:#131C2B;
-  --md-sys-color-tertiary:#1E8E4E;--md-sys-color-on-tertiary:#FFFFFF;
-  --md-sys-color-tertiary-container:#A7F4BC;--md-sys-color-on-tertiary-container:#00210E;
-  --md-sys-color-error:#BA1A1A;--md-sys-color-on-error:#FFFFFF;
-  --md-sys-color-error-container:#FFDAD6;--md-sys-color-on-error-container:#410002;
-  --md-sys-color-surface:#FDFBFF;--md-sys-color-on-surface:#1A1B1F;
-  --md-sys-color-surface-variant:#E1E2EC;--md-sys-color-on-surface-variant:#44464F;
-  --md-sys-color-surface-container-low:#F3F3FA;--md-sys-color-surface-container:#EDEDF4;
-  --md-sys-color-surface-container-high:#E7E8EE;--md-sys-color-background:#FDFBFF;
-  --md-sys-color-on-background:#1A1B1F;--md-sys-color-outline:#74777F;
-  --md-sys-color-outline-variant:#C4C6D0;
-  --ilia-success:#18A862;--ilia-success-container:#C6F5D6;
-  --ilia-warning:#E6A82E;--ilia-warning-container:#FCE9C2;
-  font-family:'Roboto',sans-serif;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Roboto', sans-serif;
+  background: #f5f5f5;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 20px;
+  min-height: 100vh;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:#FDFBFF;color:#1A1B1F;padding:24px;max-width:900px;}
 
-.section-title{font-size:16px;font-weight:500;color:#1A1B1F;margin-bottom:16px;}
+/* ── Card matches ILIA case details section ── */
+.card {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 900px;
+  overflow: hidden;
+}
 
-.year-accordion{border:1px solid var(--md-sys-color-outline-variant);border-radius:12px;overflow:hidden;margin-bottom:16px;}
-.year-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--md-sys-color-surface-container-low);cursor:pointer;user-select:none;}
-.year-label{font-size:14px;font-weight:500;color:#1A1B1F;}
-.chevron{font-size:20px;color:var(--md-sys-color-on-surface-variant);transition:transform .2s;}
-.chevron.open{transform:rotate(180deg);}
+.section-header {
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid #e0e0e0;
+}
+.section-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
 
-.year-body{padding:20px;border-top:1px solid var(--md-sys-color-outline-variant);display:none;}
-.year-body.open{display:block;}
+/* ── Year row ── */
+.year-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid #e0e0e0;
+}
+.year-row:hover { background: #fafafa; }
+.year-label { font-size: 14px; color: #1a1a1a; }
+.chevron {
+  font-size: 20px;
+  color: #757575;
+  transition: transform 0.2s;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+}
+.chevron.open { transform: rotate(180deg); }
 
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+/* ── Year body ── */
+.year-body {
+  display: none;
+  padding: 20px 24px 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
+.year-body.open { display: block; }
 
-.field-wrap{display:flex;flex-direction:column;gap:4px;}
-.field-label{font-size:11px;font-weight:500;color:var(--md-sys-color-on-surface-variant);text-transform:uppercase;letter-spacing:.5px;}
-.field-value{background:var(--md-sys-color-surface-container);border:1px solid var(--md-sys-color-outline-variant);border-radius:8px;padding:12px 14px;font-size:14px;color:#1A1B1F;}
-.field-hint{font-size:11px;color:var(--md-sys-color-on-surface-variant);margin-top:2px;}
+/* ── Two col field row ── */
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
 
-.dbr-row{display:flex;align-items:flex-start;gap:12px;}
-.dbr-field-wrap{flex:1;}
-.dbr-actions{display:flex;flex-direction:column;gap:8px;padding-top:2px;}
+/* ── Material outlined field (matches ILIA exactly) ── */
+.mdc-field {
+  position: relative;
+  border: 1px solid #c4c4c4;
+  border-radius: 4px;
+  background: #f5f5f5;
+  padding: 10px 12px 8px;
+  min-height: 52px;
+}
+.mdc-field .mdc-label {
+  position: absolute;
+  top: -8px;
+  left: 10px;
+  background: #f5f5f5;
+  padding: 0 4px;
+  font-size: 11px;
+  color: #757575;
+  line-height: 1;
+}
+.mdc-field .mdc-value {
+  font-size: 14px;
+  color: #1a1a1a;
+  margin-top: 4px;
+  line-height: 1.4;
+}
 
-.btn-send-dbr{display:inline-flex;align-items:center;gap:6px;background:var(--md-sys-color-primary);color:#fff;border:none;border-radius:20px;padding:10px 18px;font-size:13px;font-weight:500;font-family:'Roboto',sans-serif;cursor:pointer;white-space:nowrap;transition:background .15s,box-shadow .15s;}
-.btn-send-dbr:hover{background:#1a52d4;box-shadow:0 2px 8px rgba(42,98,228,.35);}
-.btn-send-dbr .mat-icon{font-size:16px;line-height:16px;}
+/* ── DBR field row with button ── */
+.dbr-field-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.dbr-field-wrap { width: 260px; flex-shrink: 0; }
+.dbr-status-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 6px;
+}
+.field-hint {
+  font-size: 11px;
+  color: #757575;
+  margin-top: 4px;
+  padding-left: 2px;
+}
 
-.status-chip{display:inline-flex;align-items:center;gap:5px;border-radius:16px;padding:4px 10px;font-size:12px;font-weight:500;}
-.status-chip.sent{background:var(--ilia-warning-container);color:#5a3e00;}
-.status-chip.completed{background:var(--ilia-success-container);color:#004d1f;}
-.status-chip.not-sent{background:var(--md-sys-color-surface-container-high);color:var(--md-sys-color-on-surface-variant);}
-.status-chip .dot{width:7px;height:7px;border-radius:50%;}
-.status-chip.sent .dot{background:var(--ilia-warning);}
-.status-chip.completed .dot{background:var(--ilia-success);}
-.status-chip.not-sent .dot{background:#888;}
+/* ── Send DBR Notice button ── */
+.btn-send {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #2A62E4;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: background 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+}
+.btn-send:hover {
+  background: #1a52d4;
+  box-shadow: 0 2px 6px rgba(42,98,228,0.3);
+}
+.btn-send .icon { font-size: 16px; line-height: 16px; }
 
-.status-meta{font-size:11px;color:var(--md-sys-color-on-surface-variant);margin-top:3px;}
+/* ── Status chips ── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 12px;
+  padding: 3px 10px 3px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  width: fit-content;
+}
+.chip .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.chip.sent { background: #FFF3E0; color: #7a4600; }
+.chip.sent .dot { background: #F57C00; }
+.chip.done { background: #E8F5E9; color: #1b5e20; }
+.chip.done .dot { background: #388E3C; }
 
-.resend-link{font-size:12px;color:var(--md-sys-color-primary);cursor:pointer;text-decoration:underline;background:none;border:none;font-family:'Roboto',sans-serif;padding:0;}
-.resend-link:hover{color:#1a52d4;}
+.status-sub {
+  font-size: 11px;
+  color: #757575;
+  padding-left: 2px;
+}
+.resend-btn {
+  background: none;
+  border: none;
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  color: #2A62E4;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+.resend-btn:hover { color: #1a52d4; }
+.resend-btn.disabled { color: #bbb; text-decoration: none; cursor: default; }
 
-.dialog-overlay{position:fixed;inset:0;background:rgba(0,0,0,.38);display:none;align-items:center;justify-content:center;z-index:100;}
-.dialog-overlay.open{display:flex;}
-.dialog{background:#fff;border-radius:16px;padding:24px;max-width:380px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.18);}
-.dialog-icon{font-size:28px;color:var(--md-sys-color-primary);margin-bottom:8px;}
-.dialog-title{font-size:16px;font-weight:500;color:#1A1B1F;margin-bottom:8px;}
-.dialog-body{font-size:14px;color:var(--md-sys-color-on-surface-variant);line-height:1.5;margin-bottom:20px;}
-.dialog-body strong{color:#1A1B1F;font-weight:500;}
-.dialog-actions{display:flex;justify-content:flex-end;gap:8px;}
-.btn-cancel{background:none;border:1px solid var(--md-sys-color-outline-variant);border-radius:20px;padding:9px 18px;font-size:13px;font-weight:500;font-family:'Roboto',sans-serif;color:var(--md-sys-color-on-surface-variant);cursor:pointer;}
-.btn-cancel:hover{background:var(--md-sys-color-surface-container);}
-.btn-confirm{background:var(--md-sys-color-primary);border:none;border-radius:20px;padding:9px 18px;font-size:13px;font-weight:500;font-family:'Roboto',sans-serif;color:#fff;cursor:pointer;}
-.btn-confirm:hover{background:#1a52d4;}
+.hint-unsent {
+  font-size: 11px;
+  color: #9e9e9e;
+  padding-left: 2px;
+}
 
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#2F3033;color:#F1F0F4;padding:12px 20px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:8px;opacity:0;transition:opacity .25s,transform .3s;pointer-events:none;z-index:200;}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.toast .mat-icon{font-size:18px;color:var(--ilia-success);}
+/* ── Confirm dialog ── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.32);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.overlay.open { display: flex; }
+.dialog {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 11px 15px rgba(0,0,0,0.2), 0 9px 46px rgba(0,0,0,0.12);
+  max-width: 400px;
+  width: 92%;
+  padding: 24px 24px 16px;
+}
+.dialog-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+}
+.dialog-body {
+  font-size: 14px;
+  color: #424242;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.dialog-body .detail-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 13px;
+}
+.dialog-body .detail-label { color: #757575; min-width: 80px; }
+.dialog-body .detail-val { color: #1a1a1a; font-weight: 500; }
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.btn-cancel {
+  background: none;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Roboto', sans-serif;
+  color: #2A62E4;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+}
+.btn-cancel:hover { background: #f0f4ff; }
+.btn-ok {
+  background: #2A62E4;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Roboto', sans-serif;
+  color: #fff;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+}
+.btn-ok:hover { background: #1a52d4; }
 
-.demo-bar{display:flex;gap:8px;margin-bottom:20px;padding:12px 14px;background:var(--md-sys-color-primary-container);border-radius:10px;align-items:center;}
-.demo-label{font-size:12px;font-weight:500;color:var(--md-sys-color-on-primary-container);margin-right:4px;}
-.demo-btn{background:none;border:1px solid var(--md-sys-color-primary);border-radius:16px;padding:5px 12px;font-size:11px;font-weight:500;font-family:'Roboto',sans-serif;color:var(--md-sys-color-primary);cursor:pointer;}
-.demo-btn.active{background:var(--md-sys-color-primary);color:#fff;}
+/* ── Resend dialog warning ── */
+.warn-bar {
+  background: #FFF8E1;
+  border-left: 3px solid #F9A825;
+  border-radius: 2px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #5a3e00;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(60px);
+  background: #323232;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.22s, transform 0.28s;
+  pointer-events: none;
+  z-index: 200;
+  white-space: nowrap;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.toast .icon { font-size: 17px; color: #69F0AE; }
+
+/* ── Demo switcher ── */
+.demo-bar {
+  background: #E8EAF6;
+  border-bottom: 1px solid #c5cae9;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #3949AB;
+  flex-wrap: wrap;
+}
+.demo-bar span { margin-right: 2px; }
+.d-btn {
+  background: none;
+  border: 1px solid #3949AB;
+  border-radius: 2px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: 'Roboto', sans-serif;
+  color: #3949AB;
+  cursor: pointer;
+}
+.d-btn.active { background: #3949AB; color: #fff; }
 </style>
 </head>
 <body>
 
-<div class="demo-bar">
-  <span class="demo-label">Preview state:</span>
-  <button class="demo-btn active" onclick="setState('default',this)">Default (not sent)</button>
-  <button class="demo-btn" onclick="setState('sent',this)">Notice sent</button>
-  <button class="demo-btn" onclick="setState('completed',this)">Client completed</button>
-</div>
+<div class="card">
 
-<div class="section-title">Yearly Policy Breakdown</div>
-
-<div class="year-accordion">
-  <div class="year-header" onclick="toggleYear(this)">
-    <span class="year-label">2036 – 2037 (Year 11)</span>
-    <span class="material-symbols-outlined chevron open">expand_more</span>
+  <!-- Demo switcher -->
+  <div class="demo-bar">
+    <span>DBR status preview:</span>
+    <button class="d-btn active" onclick="setDemo('unsent', this)">Not sent</button>
+    <button class="d-btn" onclick="setDemo('sent', this)">Notice sent</button>
+    <button class="d-btn" onclick="setDemo('done', this)">Client completed</button>
   </div>
-  <div class="year-body open">
+
+  <!-- Section header -->
+  <div class="section-header">
+    <div class="section-title">Yearly Policy Breakdown</div>
+  </div>
+
+  <!-- Year 11 — open (DBR year) -->
+  <div class="year-row" onclick="toggleYear('y11')">
+    <span class="year-label">2036 – 2037 (Year 11)</span>
+    <span class="material-symbols-outlined chevron open" id="chev-y11">expand_more</span>
+  </div>
+  <div class="year-body open" id="y11">
     <div class="field-row">
-      <div class="field-wrap">
-        <span class="field-label">Client Age</span>
-        <div class="field-value">52</div>
+      <div class="mdc-field">
+        <span class="mdc-label">Client Age</span>
+        <div class="mdc-value">52</div>
       </div>
-      <div class="field-wrap">
-        <span class="field-label">Contribution Frequency</span>
-        <div class="field-value">Annual</div>
+      <div class="mdc-field">
+        <span class="mdc-label">Contribution Frequency</span>
+        <div class="mdc-value">Annual</div>
       </div>
     </div>
-    <div class="dbr-row">
+    <!-- DBR field + button -->
+    <div class="dbr-field-row">
       <div class="dbr-field-wrap">
-        <div class="field-wrap">
-          <span class="field-label">Death Benefit Reductions</span>
-          <div class="field-value">$ 125,000.00</div>
+        <div class="mdc-field">
+          <span class="mdc-label">Death Benefit Reductions</span>
+          <div class="mdc-value">$ 125,000.00</div>
         </div>
       </div>
-      <div class="dbr-actions">
-        <div id="state-default">
-          <button class="btn-send-dbr" onclick="openConfirm()">
-            <span class="material-symbols-outlined mat-icon">send</span>
+      <div class="dbr-status-wrap">
+
+        <!-- State: unsent -->
+        <div id="s-unsent">
+          <button class="btn-send" onclick="openConfirm()">
+            <span class="material-symbols-outlined icon">send</span>
             Send DBR Notice
           </button>
-          <div class="status-meta" style="text-align:center">Notice not yet sent</div>
+          <div class="hint-unsent">Notice not yet sent</div>
         </div>
-        <div id="state-sent" style="display:none">
-          <span class="status-chip sent"><span class="dot"></span> Notice sent</span>
-          <div class="status-meta">Sent 05/29/2026 · Awaiting client</div>
-          <button class="resend-link" onclick="openResend()">↻ Resend notice</button>
+
+        <!-- State: sent -->
+        <div id="s-sent" style="display:none">
+          <span class="chip sent"><span class="dot"></span>Notice sent</span>
+          <div class="status-sub">Sent 05/29/2026 &middot; Awaiting response</div>
+          <button class="resend-btn" onclick="openResend()">↻ Resend notice</button>
         </div>
-        <div id="state-completed" style="display:none">
-          <span class="status-chip completed"><span class="dot"></span> Client completed</span>
-          <div class="status-meta">Completed 05/30/2026 · Election: YES</div>
-          <button class="resend-link" style="color:#888;text-decoration:none;cursor:default;">Resend not available</button>
+
+        <!-- State: done -->
+        <div id="s-done" style="display:none">
+          <span class="chip done"><span class="dot"></span>Client completed</span>
+          <div class="status-sub">Completed 05/30/2026 &middot; Election: <strong>YES</strong></div>
+          <span class="resend-btn disabled">Resend not available</span>
         </div>
+
       </div>
     </div>
   </div>
-</div>
 
-<div class="year-accordion">
-  <div class="year-header" onclick="toggleYear(this)">
+  <!-- Year 1 — collapsed -->
+  <div class="year-row" onclick="toggleYear('y1')">
     <span class="year-label">2026 – 2027 (Year 1)</span>
-    <span class="material-symbols-outlined chevron">expand_more</span>
+    <span class="material-symbols-outlined chevron" id="chev-y1">expand_more</span>
   </div>
-  <div class="year-body">
+  <div class="year-body" id="y1">
     <div class="field-row">
-      <div class="field-wrap">
-        <span class="field-label">Client Age</span>
-        <div class="field-value">42</div>
+      <div class="mdc-field">
+        <span class="mdc-label">Client Age</span>
+        <div class="mdc-value">42</div>
       </div>
-      <div class="field-wrap">
-        <span class="field-label">Contribution Frequency</span>
-        <div class="field-value">Annual</div>
+      <div class="mdc-field">
+        <span class="mdc-label">Contribution Frequency</span>
+        <div class="mdc-value">Annual</div>
       </div>
     </div>
-    <div class="field-wrap">
-      <span class="field-label">Death Benefit Reductions</span>
-      <div class="field-value">$ 0.00</div>
-      <span class="field-hint">Value cannot be negative.</span>
+    <div style="width:260px">
+      <div class="mdc-field">
+        <span class="mdc-label">Death Benefit Reductions</span>
+        <div class="mdc-value">$ 0.00</div>
+      </div>
+      <div class="field-hint">Value cannot be negative.</div>
     </div>
   </div>
+
 </div>
 
-<div class="dialog-overlay" id="confirm-dialog">
+<!-- Confirm Send dialog -->
+<div class="overlay" id="dlg-confirm">
   <div class="dialog">
-    <div class="dialog-icon"><span class="material-symbols-outlined">mark_email_unread</span></div>
     <div class="dialog-title">Send DBR Notice?</div>
     <div class="dialog-body">
-      A DBR notice will be sent to <strong>all Settlor authorized signers</strong> on this case with a pre-populated LifeLink eSign form.<br><br>
-      <strong>Policy:</strong> LS2297246 &nbsp;·&nbsp; <strong>DBR Amount:</strong> $125,000<br>
-      <strong>Respond by:</strong> 07/01/2026
+      A pre-populated LifeLink eSign form will be sent to the client and all Settlor authorized signers on this case.
+      <div class="detail-row"><span class="detail-label">Policy</span><span class="detail-val">LS2297246</span></div>
+      <div class="detail-row"><span class="detail-label">DBR Amount</span><span class="detail-val">$125,000.00</span></div>
+      <div class="detail-row"><span class="detail-label">Respond by</span><span class="detail-val">07/01/2026</span></div>
     </div>
     <div class="dialog-actions">
-      <button class="btn-cancel" onclick="closeConfirm()">Cancel</button>
-      <button class="btn-confirm" onclick="confirmSend()">Send notice</button>
+      <button class="btn-cancel" onclick="close('dlg-confirm')">Cancel</button>
+      <button class="btn-ok" onclick="confirmSend()">Send notice</button>
     </div>
   </div>
 </div>
 
-<div class="dialog-overlay" id="resend-dialog">
+<!-- Resend dialog -->
+<div class="overlay" id="dlg-resend">
   <div class="dialog">
-    <div class="dialog-icon" style="color:var(--ilia-warning)"><span class="material-symbols-outlined">refresh</span></div>
     <div class="dialog-title">Resend DBR Notice?</div>
     <div class="dialog-body">
-      A notice was already sent on <strong>05/29/2026</strong>. Resending will send a new eSign link to all Settlor authorized signers and invalidate the previous link.
+      <div class="warn-bar">A notice was already sent on 05/29/2026. Resending will invalidate the previous eSign link.</div>
+      A new eSign link will be sent to the client and all Settlor authorized signers.
     </div>
     <div class="dialog-actions">
-      <button class="btn-cancel" onclick="closeResend()">Cancel</button>
-      <button class="btn-confirm" onclick="confirmResend()">Resend notice</button>
+      <button class="btn-cancel" onclick="close('dlg-resend')">Cancel</button>
+      <button class="btn-ok" onclick="confirmResend()">Resend</button>
     </div>
   </div>
 </div>
 
+<!-- Toast -->
 <div class="toast" id="toast">
-  <span class="material-symbols-outlined mat-icon">check_circle</span>
-  <span id="toast-msg">DBR notice sent successfully</span>
+  <span class="material-symbols-outlined icon">check_circle</span>
+  <span id="toast-msg"></span>
 </div>
 
 <script>
-function toggleYear(header) {
-  const body = header.nextElementSibling;
-  const chevron = header.querySelector('.chevron');
-  const isOpen = body.classList.contains('open');
-  body.classList.toggle('open', !isOpen);
-  chevron.classList.toggle('open', !isOpen);
+function toggleYear(id) {
+  const body = document.getElementById(id);
+  const chev = document.getElementById('chev-' + id);
+  const open = body.classList.toggle('open');
+  chev.classList.toggle('open', open);
 }
-function setState(state, btn) {
-  document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+function setDemo(state, btn) {
+  document.querySelectorAll('.d-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('state-default').style.display = state === 'default' ? '' : 'none';
-  document.getElementById('state-sent').style.display = state === 'sent' ? '' : 'none';
-  document.getElementById('state-completed').style.display = state === 'completed' ? '' : 'none';
+  document.getElementById('s-unsent').style.display = state === 'unsent' ? '' : 'none';
+  document.getElementById('s-sent').style.display   = state === 'sent'   ? '' : 'none';
+  document.getElementById('s-done').style.display   = state === 'done'   ? '' : 'none';
+  // make sure year 11 is open
+  document.getElementById('y11').classList.add('open');
+  document.getElementById('chev-y11').classList.add('open');
 }
-function openConfirm() { document.getElementById('confirm-dialog').classList.add('open'); }
-function closeConfirm() { document.getElementById('confirm-dialog').classList.remove('open'); }
-function openResend() { document.getElementById('resend-dialog').classList.add('open'); }
-function closeResend() { document.getElementById('resend-dialog').classList.remove('open'); }
+function openConfirm() { document.getElementById('dlg-confirm').classList.add('open'); }
+function openResend()  { document.getElementById('dlg-resend').classList.add('open'); }
+function close(id)     { document.getElementById(id).classList.remove('open'); }
 function confirmSend() {
-  closeConfirm();
-  document.getElementById('state-default').style.display = 'none';
-  document.getElementById('state-sent').style.display = '';
-  document.getElementById('state-completed').style.display = 'none';
-  document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.demo-btn')[1].classList.add('active');
-  showToast('DBR notice sent successfully');
+  close('dlg-confirm');
+  setDemoState('sent');
+  toast('DBR notice sent successfully');
 }
 function confirmResend() {
-  closeResend();
-  showToast('DBR notice resent successfully');
+  close('dlg-resend');
+  toast('DBR notice resent successfully');
 }
-function showToast(msg) {
+function setDemoState(state) {
+  document.getElementById('s-unsent').style.display = state === 'unsent' ? '' : 'none';
+  document.getElementById('s-sent').style.display   = state === 'sent'   ? '' : 'none';
+  document.getElementById('s-done').style.display   = state === 'done'   ? '' : 'none';
+  document.querySelectorAll('.d-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.toLowerCase().includes(state === 'unsent' ? 'not' : state));
+  });
+}
+function toast(msg) {
   const t = document.getElementById('toast');
   document.getElementById('toast-msg').textContent = msg;
   t.classList.add('show');
